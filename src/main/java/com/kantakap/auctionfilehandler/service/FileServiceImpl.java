@@ -63,10 +63,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Flux<Player> processPlayersData(String auctionId) {
+    public Flux<Player> processPlayersData(String auctionId, String token) {
         var request = new GraphQLRequest("query { processPlayersData(auctionId: \"" + auctionId + "\") { username } }", Collections.emptyMap());
         log.info("Request: {}", request);
-        return processPlayersData(request, "Bearer " + "token")
+        return processPlayersData(request, token)
                 .map(response -> {
                     log.info("Response: {}", response);
                     return response.getData().getProcessPlayersData();

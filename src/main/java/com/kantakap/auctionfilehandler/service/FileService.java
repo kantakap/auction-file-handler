@@ -15,6 +15,6 @@ import java.io.IOException;
 public interface FileService {
     Mono<CSV> save(String auctionId, String creatorId, File file);
     Mono<String> getCreatorId(String token);
-    Flux<Player> processPlayersData(String auctionId);
+    Flux<Player> processPlayersData(String auctionId, String token);
     File convertFilePartToFile(FilePart filePart) throws IOException;
 }

@@ -22,7 +22,7 @@ public class FileController {
             File f = fileService.convertFilePartToFile(file);
             return fileService.getCreatorId(authorization)
                     .flatMap(id -> fileService.save(auctionId, id, f))
-                    .flatMapMany(csv -> fileService.processPlayersData(auctionId));
+                    .flatMapMany(csv -> fileService.processPlayersData(auctionId, authorization));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
