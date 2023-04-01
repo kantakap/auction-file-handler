@@ -7,6 +7,7 @@ import com.kantakap.auctionfilehandler.model.CSV;
 import com.kantakap.auctionfilehandler.model.Player;
 import com.kantakap.auctionfilehandler.repository.CSVRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -26,6 +27,7 @@ import java.nio.channels.FileChannel;
 import java.util.Base64;
 import java.util.Collections;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
@@ -39,8 +41,10 @@ public class FileServiceImpl implements FileService {
                     .auctionId(auctionId)
                     .csv(new Binary(BsonBinarySubType.BINARY, convertFileToBinary(file)))
                     .build();
+            log.info("CSV: {}", csv);
             return csvRepository.save(csv);
         } catch (IOException e) {
+            e.printStackTrace();
             return Mono.error(new RuntimeException("Server failed to process file."));
         }
     }
@@ -49,7 +53,10 @@ public class FileServiceImpl implements FileService {
     public Mono<String> getCreatorId(String token) {
         var request = new GraphQLRequest("query { me { id } }", Collections.emptyMap());
         return me(request, token)
-                .map(response -> response.getData().getMe().getId());
+                .map(response -> {
+                    log.info("ME ID: {}", response.getData().getMe().getId());
+                    return response.getData().getMe().getId();
+                });
 //        return sendGraphQLRequest(request, authorization)
 //                .map(response -> response.getData().getMe().getId())
 //                .doOnSuccess(creatorId -> fileService.save(auctionId, creatorId, file));
@@ -58,8 +65,12 @@ public class FileServiceImpl implements FileService {
     @Override
     public Flux<Player> processPlayersData(String auctionId) {
         var request = new GraphQLRequest("query { processPlayersData(auctionId: \"" + auctionId + "\") { username } }", Collections.emptyMap());
+        log.info("Request: {}", request);
         return processPlayersData(request, "Bearer " + "token")
-                .map(response -> response.getData().getProcessPlayersData())
+                .map(response -> {
+                    log.info("Response: {}", response);
+                    return response.getData().getProcessPlayersData();
+                })
                 .flatMapMany(Flux::fromIterable);
     }
 
