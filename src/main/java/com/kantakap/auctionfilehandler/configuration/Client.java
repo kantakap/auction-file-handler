@@ -10,6 +10,6 @@ public class Client {
     @Bean
     public WebClient webClient() {
 //        return WebClient.create("http://localhost:8080/graphql");
-        return WebClient.create("http://kantakap-auction-api/graphql");
+        return WebClient.create("http://kantakap-auction-api:8080/graphql");
     }
 }
