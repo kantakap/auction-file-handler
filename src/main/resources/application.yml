@@ -8,9 +8,12 @@ server:
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
+      authentication-database: admin
+      username: user
+      password: pass
       database: auction
+      port: 27017
+      host: mongodb
   servlet:
     multipart:
       enabled: true
