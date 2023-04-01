@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class FileController {
